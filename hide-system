@@ -1,0 +1,90 @@
+<style type="text/css">
+  .hide-system-action.ativo {
+    opacity: 1 !important;
+  }
+
+  .hide-system-action:not(.ativo) {
+    transition: .5s;
+  }
+
+  .hide-system-action:not(.ativo):hover {
+    opacity: 1 !important;
+  }
+
+  body.elementor-editor-wp-page .hide-system-reaction {
+    display: inherit !important;
+  }
+
+  body.elementor-editor-active .hide-system-reaction {
+    display: inherit;
+  }
+
+  .hide-system-reaction {
+    display: none;
+  }
+</style>
+
+<script defer type="text/javascript">
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+    if (!window.location.search.includes('elementor')) {
+
+      var hideSystemSections = document.querySelectorAll('.use-hide-system');
+
+      if (hideSystemSections[0] !== undefined) {
+
+        hideSystemSections.forEach(function (hideSystemSection) {
+
+          var opacityValue = hideSystemSection.getAttribute('hide-system-opacity');
+          if((+opacityValue < 0 && +opacityValue > 1) || opacityValue === undefined) opacityValue = 1;
+
+          console.log('opacityValue: ', opacityValue);  
+
+          var actionElements = hideSystemSection.querySelectorAll('.hide-system-action');
+          var reactionElements = hideSystemSection.querySelectorAll('.hide-system-reaction');
+
+          if (actionElements[0] !== undefined && reactionElements[0] !== undefined) {
+            
+            actionElements[0].classList.add('ativo');
+            reactionElements.forEach(function (reactionElement) {
+              reactionElement.style.display = "none";
+            });
+            reactionElements[0].style.display = "block";
+
+            var currentAction = actionElements[0];
+            var currentReaction = reactionElements[0];
+
+            actionElements.forEach(function (actionElement, index) {
+              actionElement.style.cursor = "pointer";
+              actionElement.style.opacity = "" + opacityValue + "";
+
+              actionElement.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var getActionID = actionElement.getAttribute('hide-system-id');
+
+                
+                currentAction.classList.remove('ativo');
+                currentAction.style.opacity = "" + opacityValue + "";
+                currentReaction.style.display = "none";
+
+                currentAction = actionElement;
+                currentAction.classList.add('ativo');
+
+                currentReaction = hideSystemSection.querySelector('.hide-system-reaction[hide-system-id="' + getActionID + '"]');
+                currentReaction.style.display = "block";
+
+              });
+            });
+
+          }
+
+        });
+
+      }
+
+    }
+
+  });
+</script>
