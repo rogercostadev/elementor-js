@@ -31,14 +31,16 @@
     if (!window.location.search.includes('elementor')) {
 
       var hideSystemSections = document.querySelectorAll('.use-hide-system');
-
       if (hideSystemSections[0] !== undefined) {
-
+        
         hideSystemSections.forEach(function (hideSystemSection) {
 
           var opacityValue = hideSystemSection.getAttribute('hide-system-opacity');
           var useScroll = hideSystemSection.getAttribute('hide-system-scroll');
           if((+opacityValue < 0 && +opacityValue > 1) || opacityValue === undefined || opacityValue === null) opacityValue = 1;
+
+          console.log('opacityValue: ', opacityValue);  
+          console.log('useScroll: ', useScroll);  
 
           var actionElements = hideSystemSection.querySelectorAll('.hide-system-action');
           var reactionElements = hideSystemSection.querySelectorAll('.hide-system-reaction');
@@ -62,7 +64,7 @@
                 e.preventDefault();
                 e.stopPropagation();
                 var getActionID = actionElement.getAttribute('hide-system-id');
-
+                
                 currentAction.classList.remove('ativo');
                 currentAction.style.opacity = "" + opacityValue + "";
                 currentReaction.style.display = "none";
@@ -74,22 +76,26 @@
                 currentReaction.style.display = "block";
 
                 if(useScroll !== null && useScroll !== undefined && useScroll !== '') {
+                  var getOffsetTop = function (elem) {
+                  var distance = 0;
+                  if (elem.offsetParent) {
+                    do {
+                      distance += elem.offsetTop;
+                      elem = elem.offsetParent;
+                    } while (elem);
+                  }
+                  return distance < 0 ? 0 : distance;
+                  };
                   window.scroll({
-                  top: currentReaction.offsetTop + 20,
+                  top: getOffsetTop(currentReaction) - 60,
                   behavior: "smooth",
                   });
                 }
-
               });
             });
-
           }
-
         });
-
       }
-
     }
-
   });
 </script>
