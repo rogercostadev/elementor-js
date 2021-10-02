@@ -37,9 +37,8 @@
         hideSystemSections.forEach(function (hideSystemSection) {
 
           var opacityValue = hideSystemSection.getAttribute('hide-system-opacity');
-          if((+opacityValue < 0 && +opacityValue > 1) || opacityValue === undefined) opacityValue = 1;
-
-          console.log('opacityValue: ', opacityValue);  
+          var useScroll = hideSystemSection.getAttribute('hide-system-scroll');
+          if((+opacityValue < 0 && +opacityValue > 1) || opacityValue === undefined || opacityValue === null) opacityValue = 1;
 
           var actionElements = hideSystemSection.querySelectorAll('.hide-system-action');
           var reactionElements = hideSystemSection.querySelectorAll('.hide-system-reaction');
@@ -64,7 +63,6 @@
                 e.stopPropagation();
                 var getActionID = actionElement.getAttribute('hide-system-id');
 
-                
                 currentAction.classList.remove('ativo');
                 currentAction.style.opacity = "" + opacityValue + "";
                 currentReaction.style.display = "none";
@@ -74,6 +72,13 @@
 
                 currentReaction = hideSystemSection.querySelector('.hide-system-reaction[hide-system-id="' + getActionID + '"]');
                 currentReaction.style.display = "block";
+
+                if(useScroll !== null && useScroll !== undefined && useScroll !== '') {
+                  window.scroll({
+                  top: currentReaction.offsetTop + 20,
+                  behavior: "smooth",
+                  });
+                }
 
               });
             });
